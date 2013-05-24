@@ -1,0 +1,27 @@
+<project name="DetectCircles" default="" basedir=".">
+	<description>
+		DetectCircles build file
+	</description>
+	<property name="src" location="src" />
+	<property name="build" location="plugins" />
+	<property name="dist" location="dist" />
+	<property name="pluginsDir" location="$basedir/../../IJ/plugins/" />
+	<property name="user.name" value="Michael Closson &lt;closms@gmail.com&gt;" />
+	<property name="version" value="1.0" />
+	<target name="main" depends="compress" description="Main target">
+		<echo>
+			Building the .jar file.
+		</echo>
+	</target>
+	<target name="compress" depends="" description="generate the distribution">
+		<jar jarfile="Detect_Circles-${version}.jar">
+			<!--fileset dir="." includes="**/*" excludes="Detect_Circles.jar" /-->
+			<fileset dir="${build}" includes="**/*" />
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Version" value="${version}" />
+			</manifest>
+		</jar>
+		<!--copy file="Detect_Circles.jar" toDir="${pluginsDir}" /-->
+	</target>
+</project>
