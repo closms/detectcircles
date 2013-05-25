@@ -4,6 +4,12 @@ DetectCircles
 ImageJ plugin that uses the Hough transform to extract circle parameters
 from an image.
 
+
+Releases
+--------
+
+* [1.0](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.0.jar)
+
 Requirements
 ------------
 
