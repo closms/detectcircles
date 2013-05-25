@@ -17,7 +17,7 @@ Releases
 To use the plugin.  Place the release jar file in the ImageJ plugins
 directory.
 
-* [1.0](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.0.jar)
+* [1.0](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.0.jar)  (md5sum: `7d1e6102e7a0b37d5a675b0cff772921`)
 
 
 How to set up an Eclipse workspace
