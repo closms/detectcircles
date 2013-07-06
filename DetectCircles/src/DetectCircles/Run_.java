@@ -1,19 +1,13 @@
+package DetectCircles;
 import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.Vector;
 
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.GenericDialog;
-import ij.gui.ImageCanvas;
-import ij.gui.ImageWindow;
 import ij.gui.OvalRoi;
 import ij.gui.Overlay;
 import ij.gui.Roi;
@@ -23,15 +17,12 @@ import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
 
-public class Detect_Circles implements PlugInFilter, MouseListener {
+public class Run_ implements PlugInFilter  {
 
 	String arg;
 	ImagePlus imp;
 	Overlay O;
 	double maxval;
-	ImageCanvas canvas;
-	static Vector<Integer> images = new Vector<Integer>();
-	DCResultsTable rt;
 	ImagePlus edimp;
 	Overlay edO;
 	
@@ -79,16 +70,6 @@ public class Detect_Circles implements PlugInFilter, MouseListener {
 		minR = (int)(minD/cal.pixelWidth)/2;
 		maxR = (int)(maxD/cal.pixelWidth)/2;
 		
-		
-		/* setup listener for mouse events. */
-		Integer id = new Integer(imp.getID());
-		if (!images.contains(id)) {
-			ImageWindow win = imp.getWindow();
-			canvas = win.getCanvas();
-			canvas.addMouseListener(this);
-			images.addElement(id);
-		}
-				
 		W = ip.getWidth();
 		H = ip.getHeight();
 		
@@ -197,8 +178,8 @@ public class Detect_Circles implements PlugInFilter, MouseListener {
 				}
 			}
 		}
-				
-		rt = new DCResultsTable();
+		
+		DCResultsTable rt = DCResultsTable.getInstance();
 								
 		/* draw the circles we found.  Using the best score list. */
 		for (int y = 0; y < H; y++) {
@@ -298,76 +279,5 @@ public class Detect_Circles implements PlugInFilter, MouseListener {
 
 		}
 	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-		;
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
-		int offscreenX = canvas.offScreenX(x);
-		int offscreenY = canvas.offScreenY(y);
-		
-		Calibration cal = this.imp.getCalibration();
-		
-		/* find the overlay the was clicked. */
-		int nO = this.imp.getOverlay().size();
-		for (int i = 0; i < nO; i++) {
-			Roi r = this.imp.getOverlay().get(i);
-			Rectangle rec = r.getBounds();
-			if (rec.contains(offscreenX, offscreenY)) {
-				// Recover the circle parameters.
-				// The unit of these parameters is pixels.
-				StringTokenizer st = new StringTokenizer(r.getName(), ":");
-				double rx = Double.parseDouble(st.nextToken());
-				double ry = Double.parseDouble(st.nextToken());
-				double rr = Double.parseDouble(st.nextToken());
-				double rs = Double.parseDouble(st.nextToken());
-				
-				Color c = r.getStrokeColor();
-
-				if (c.equals(Color.red)) {
-					// Remove the entry from the results table.
-					// The result table uses the unit of the table.
-					int row = rt.findRow(rx*cal.pixelWidth, ry*cal.pixelWidth, 2*rr*cal.pixelWidth, rs);
-					if (row >=0) {
-						rt.deleteRow(row);
-					}
-					r.setStrokeColor(Color.blue);
-				}
-				else {
-					// Add back the value to the result table.
-                    rt.incrementCounter();
-                    rt.addValue("x", rx*cal.pixelWidth);
-                    rt.addValue("y", ry*cal.pixelWidth);
-                    rt.addValue("Diameter", ((double)2*rr) * cal.pixelWidth);
-                    rt.addValue("Score", rs);
-                    
-					r.setStrokeColor(Color.red);
-				}
-			}
-		}
-		this.imp.getCanvas().repaint();
-		this.rt.show();
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		;
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		;
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		;
-	}
-	
 }
 

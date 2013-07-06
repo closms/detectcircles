@@ -1,8 +1,7 @@
+package DetectCircles;
 import ij.*;
-import ij.plugin.filter.Analyzer;
 import ij.text.*;
 import ij.process.*;
-import ij.gui.Roi;
 import ij.util.Tools;
 import ij.io.SaveDialog;
 import java.awt.*;
@@ -55,9 +54,14 @@ public class DCResultsTable implements Cloneable {
 	private boolean autoFormat = true;
 	
 	public String windowTitle = "Detect Circles Results";
+	static final DCResultsTable instance = new DCResultsTable();
 
 	/** Constructs an empty ResultsTable with the counter=0 and no columns. */
 	public DCResultsTable() {
+	}
+
+	static DCResultsTable getInstance() {
+		return instance;
 	}
 	
 	/** Returns the ResultsTable used by the Measure command. This

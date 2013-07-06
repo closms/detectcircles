@@ -1,7 +1,7 @@
+package DetectCircles;
 
 import ij.util.Java2;
 import java.awt.*;
-import java.awt.event.*;
 
 class DCTextCanvas extends Canvas {
 

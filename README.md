@@ -17,7 +17,15 @@ Releases
 To use the plugin.  Place the release jar file in the ImageJ plugins
 directory.
 
+* [1.1](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.1.jar)  (md5sum: `c2af86e0ea29f38ee434df26352af135`)
 * [1.0](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.0.jar)  (md5sum: `7d1e6102e7a0b37d5a675b0cff772921`)
+
+
+Known Issues
+------------
+
+* There can only be one results table.  If the plugin is used on more than one image at a time, the behaviour of the results table is undefined.
+* The detected roi's can be changed after the detection plugin runs, but the coordinated in the results table will not be updated.
 
 
 How to set up an Eclipse workspace
