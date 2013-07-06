@@ -25,7 +25,7 @@ Known Issues
 ------------
 
 * There can only be one results table.  If the plugin is used on more than one image at a time, the behaviour of the results table is undefined.
-* The detected roi's can be changed after the detection plugin runs, but the coordinated in the results table will not be updated.
+* The detected roi's can be changed after the detection plugin runs, but the coordinates in the results table will not be updated.
 
 
 How to set up an Eclipse workspace
