@@ -1,9 +1,11 @@
 package DetectCircles;
+
 import java.awt.Color;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import ij.Executer;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -38,12 +40,7 @@ public class Run_ implements PlugInFilter  {
 	public void run(ImageProcessor ip) {		
 		
 		/* parameters */
-		double minD = 70;
-		double maxD = 90;
 		int minEdgeVal = 1;
-		double minScore = 90.;
-		boolean smooth = true;
-		boolean show_hough = false;
 
 		//These parameters are in pixels.
 		int minR, maxR;
@@ -52,23 +49,32 @@ public class Run_ implements PlugInFilter  {
 		
 		Calibration cal = imp.getCalibration();
 
+		DCParameters p = DCParameters.getInstance();
 		
 		GenericDialog gd = new GenericDialog("Detect Circles");
-		gd.addNumericField("Min Diameter: ", minD*cal.pixelWidth, 3);
-		gd.addNumericField("Max Diameter: ", maxD*cal.pixelWidth, 3);
-		gd.addNumericField("Min Score:", minScore, 0);
-		gd.addCheckbox("Smooth Image", smooth);
-		gd.addCheckbox("Show Hough Space", show_hough);
+		gd.addNumericField("Min Diameter: ", p.minD*cal.pixelWidth, 3);
+		gd.addNumericField("Max Diameter: ", p.maxD*cal.pixelWidth, 3);
+		gd.addNumericField("Min Score:", p.minScore, 0);
+		gd.addCheckbox("Smooth Image", p.smooth);
+		gd.addCheckbox("Show Hough Space", p.show_hough);
 		gd.showDialog();
 		if (gd.wasCanceled()) return;
-		minD = (double)gd.getNextNumber();
-		maxD = (double)gd.getNextNumber();
-		minScore = (double)gd.getNextNumber();
-		smooth = (boolean) gd.getNextBoolean();
-		show_hough = (boolean) gd.getNextBoolean();
+		
+		/* clear out any roi's and results from a previous run. */
+		DCResultsTable rt = DCResultsTable.getInstance();
+		rt.reset();
+		imp.setOverlay(null);
+		
+		/* get the parameters that the user entered. */
+		
+		p.minD = (double)gd.getNextNumber();
+		p.maxD = (double)gd.getNextNumber();
+		p.minScore = (double)gd.getNextNumber();
+		p.smooth = (boolean) gd.getNextBoolean();
+		p.show_hough = (boolean) gd.getNextBoolean();
 
-		minR = (int)(minD/cal.pixelWidth)/2;
-		maxR = (int)(maxD/cal.pixelWidth)/2;
+		minR = (int)(p.minD/cal.pixelWidth)/2;
+		maxR = (int)(p.maxD/cal.pixelWidth)/2;
 		
 		W = ip.getWidth();
 		H = ip.getHeight();
@@ -77,11 +83,11 @@ public class Run_ implements PlugInFilter  {
 
 		ImageProcessor nip = new ByteProcessor(ip, false);
 
-		if (smooth) nip.smooth();
+		if (p.smooth) nip.smooth();
 		
 		nip.findEdges();
 
-		if (show_hough) {
+		if (p.show_hough) {
 			edimp = new ImagePlus("edge detection", new ByteProcessor(nip, false));
 			edimp.show();
 			edO = edimp.getOverlay();
@@ -98,7 +104,7 @@ public class Run_ implements PlugInFilter  {
 		}
 		
 		List<double[][]> ALL = null;
-		if (show_hough) {
+		if (p.show_hough) {
 			ALL = new LinkedList<double[][]>();
 		}
 		double[][] Scores = new double[W][H];
@@ -110,7 +116,7 @@ public class Run_ implements PlugInFilter  {
 
 		for (int R = minR; R <= maxR; R++) {
 
-			if (show_hough) {
+			if (p.show_hough) {
 				Z = new double[W][H];
 			}
 			else {
@@ -140,14 +146,14 @@ public class Run_ implements PlugInFilter  {
 			for (int y = 0; y < H; y++) {
 				for (int x = 0; x < W; x++) {
 					double S = Z[x][y];
-					if (S > minScore && S > Scores[x][y]) {
+					if (S > p.minScore && S > Scores[x][y]) {
 						Scores[x][y] = S;
 						Radiuses[x][y] = R;
 					}
 				}
 			}
 
-			if (show_hough) {
+			if (p.show_hough) {
 				ALL.add(Z);
 			}
 			IJ.showProgress((R-minR), (maxR-minR+1));
@@ -179,8 +185,6 @@ public class Run_ implements PlugInFilter  {
 			}
 		}
 		
-		DCResultsTable rt = DCResultsTable.getInstance();
-								
 		/* draw the circles we found.  Using the best score list. */
 		for (int y = 0; y < H; y++) {
 			for (int x = 0; x < W; x++) {
@@ -194,7 +198,7 @@ public class Run_ implements PlugInFilter  {
                     r.setName(x+":"+y+":"+R+":"+S);
                     r.setStrokeColor(Color.red);
                     O.add(r);
-                    if (show_hough) {
+                    if (p.show_hough) {
                     	edO.add(r);
                     }
 
@@ -210,18 +214,19 @@ public class Run_ implements PlugInFilter  {
 
 		rt.show();
 
-		if (show_hough) {
+		if (p.show_hough) {
 			for(double[][] a: ALL) {
 				ADD(IS, a);
 			}
 		}
 
 		
-		if (show_hough) {
+		if (p.show_hough) {
 			ImagePlus IP = new ImagePlus("Hough Space", IS);
 			IP.show();
 		}
 		
+		new Executer(Toggle_Circles.class.getName().replaceFirst("^[^.]*.", "").replace('_', ' '), null);
 	}
 
 	
