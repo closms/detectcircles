@@ -58,7 +58,7 @@ How to set up an Eclipse workspace
 4. Add a new run/debug configuration based on Java Application
   * Name: `ImageJ`
   * On the Main tab
-    * Project: `DetectCircles`
+    * Project: `detectcircles`
     * Main class: `ij.ImageJ`
   * On the Arguments tab:
     * VM arguments: `-Xms256m -Xmx512m -Dplugins.dir=${project_loc}/DetectCircles`
