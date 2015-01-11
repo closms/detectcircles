@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="var" path="IJ_LOC"/>
-	<classpathentry kind="var" path="IJ_LOC/ij.jar" sourcepath="/IJ_LOC/ij146r-src.zip"/>
-	<classpathentry kind="output" path="plugins"/>
-</classpath>

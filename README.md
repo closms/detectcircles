@@ -20,17 +20,18 @@ directory.
 * [Download version 1.1](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.1.jar)  (md5sum: `a01b5d1750c10ba3019446174c7f32ea`)
 * [Download version 1.0](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.0.jar)  (md5sum: `7d1e6102e7a0b37d5a675b0cff772921`)
 
+
 Changelog
 ---------
 
 2013-07-21 Michael Closson <closms@gmail.com>
 
-	* [Fix issue #2](https://github.com/closms/detectcircles/issues/2)
-	* Re-release it as version 1.1.  Code tag it as v1.1.1
+* [Fix issue #2](https://github.com/closms/detectcircles/issues/2)
+* Re-release it as version 1.1.  Code tag it as v1.1.1
 
 2013-07-06 Michael Closson <closms@gmail.com>
 
-	* [Fix issue #1](https://github.com/closms/detectcircles/issues/1)
+* [Fix issue #1](https://github.com/closms/detectcircles/issues/1)
 
 
 Known Issues
@@ -43,34 +44,24 @@ Known Issues
 How to set up an Eclipse workspace
 ----------------------------------
 
-Start in a clean directory.
-
-Install IJ and IJ source.
-
-1. `wget http://rsbweb.nih.gov/ij/download/zips/ij146.zip`
-2. `unzip ij146.zip`
-3. `wget -P ImageJ http://imagej.nih.gov/ij/download/src/ij146r-src.zip`
-
-Checkout the code.
-
-1. `git clone git://github.com/closms/detectcircles.git`
-
-Set up the Eclipse workspace.
-
-1. Open the directory detectcircles as an Eclipse workspace
-2. In Eclipse, Import a new project.  Use 'Existing Projects into Workspace'
-   as the import source.  Use directory 'DetectCircles' (note the capitols)
-   as the project root directory.
-3. Add a new classpath variable in your workspace called IJ_LOC, which points
-   to the directory where you installed IJ and the source
+1. (assumption) Eclipse and EGit are installed and configured. There is a good tutorial on Eclipse, Git and Github [here](http://www.vogella.com/tutorials/EclipseGit/article.html).
+2. Checkout DetectCircles with EGit.
+  * File -> Import -> Git -> Projects From Git.
+  * **Source Git Repository** Any URI that is compatible with Github will work.
+  * **Branch Selection** Clone the only branch in the repository, `master`.
+  * **Local Destination** It is safe to use the default values in this dialog window
+  * **Select a wizard to use for importing projects** Use Import existing Eclipse projects
+  * **Import Projects** It is safe to use the default values in this dialog window
+3. Add a new classpath variable with the name `IJ_LOC` so that Eclipse can find ImageJ and the ImageJ source code.
+  * The build path expects to find `ij.jar` at `IJ_LOC/ij.jar`.
+  * The build path expects to find the ImageJ source code at `IJ_LOC/ij146r-src.zip`.
 4. Add a new run/debug configuration based on Java Application
-    * Name: `ImageJ`
-    * On the Main tab
-      * Project: `DetectCircles`
-      * Main class: `ij.ImageJ`
-    * On the Arguments tab:
-      * VM arguments: `-Xms256m -Xmx512m -Dplugins.dir=${workspace_loc}/DetectCircles`
-
+  * Name: `ImageJ`
+  * On the Main tab
+    * Project: `DetectCircles`
+    * Main class: `ij.ImageJ`
+  * On the Arguments tab:
+    * VM arguments: `-Xms256m -Xmx512m -Dplugins.dir=${workspace_loc}/DetectCircles`
 
 Now you can code/debug and step through the IJ source.
 
