@@ -61,7 +61,7 @@ How to set up an Eclipse workspace
     * Project: `DetectCircles`
     * Main class: `ij.ImageJ`
   * On the Arguments tab:
-    * VM arguments: `-Xms256m -Xmx512m -Dplugins.dir=${workspace_loc}/DetectCircles`
+    * VM arguments: `-Xms256m -Xmx512m -Dplugins.dir=${project_loc}/DetectCircles`
 
 Now you can code/debug and step through the IJ source.
 
