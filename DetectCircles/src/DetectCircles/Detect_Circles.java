@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import ij.Executer;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -14,12 +13,14 @@ import ij.gui.OvalRoi;
 import ij.gui.Overlay;
 import ij.gui.Roi;
 import ij.measure.Calibration;
+import ij.measure.ResultsTable;
+import ij.plugin.filter.Analyzer;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 
 
-public class Run_ implements PlugInFilter  {
+public class Detect_Circles implements PlugInFilter  {
 
 	String arg;
 	ImagePlus imp;
@@ -52,16 +53,20 @@ public class Run_ implements PlugInFilter  {
 		DCParameters p = DCParameters.getInstance();
 		
 		GenericDialog gd = new GenericDialog("Detect Circles");
-		gd.addNumericField("Min Diameter: ", p.minD*cal.pixelWidth, 3);
-		gd.addNumericField("Max Diameter: ", p.maxD*cal.pixelWidth, 3);
-		gd.addNumericField("Min Score:", p.minScore, 0);
-		gd.addCheckbox("Smooth Image", p.smooth);
-		gd.addCheckbox("Show Hough Space", p.show_hough);
+		gd.addNumericField("Min_Diameter", p.minD*cal.pixelWidth, 3);
+		gd.addNumericField("Max_Diameter", p.maxD*cal.pixelWidth, 3);
+		gd.addNumericField("Min_Score", p.minScore, 0);
+		gd.addCheckbox("Smooth_Image", p.smooth);
+		gd.addCheckbox("Show_Hough_Space", p.show_hough);
 		gd.showDialog();
 		if (gd.wasCanceled()) return;
 		
 		/* clear out any roi's and results from a previous run. */
-		DCResultsTable rt = DCResultsTable.getInstance();
+		ResultsTable rt = Analyzer.getResultsTable();
+		if (rt == null) {
+		    rt = new ResultsTable();
+		    Analyzer.setResultsTable(rt);
+		}
 		rt.reset();
 		imp.setOverlay(null);
 		
@@ -212,7 +217,7 @@ public class Run_ implements PlugInFilter  {
 			}
 		}
 
-		rt.show();
+		rt.show("Results");
 
 		if (p.show_hough) {
 			for(double[][] a: ALL) {
@@ -226,7 +231,7 @@ public class Run_ implements PlugInFilter  {
 			IP.show();
 		}
 		
-		new Executer(Toggle_Circles.class.getName().replaceFirst("^[^.]*.", "").replace('_', ' '), null);
+		//new Executer(Toggle_Circles.class.getName().replaceFirst("^[^.]*.", "").replace('_', ' '), null);
 	}
 
 	

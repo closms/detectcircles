@@ -7,6 +7,8 @@ import java.util.StringTokenizer;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.measure.Calibration;
+import ij.measure.ResultsTable;
+import ij.plugin.filter.Analyzer;
 import ij.plugin.tool.PlugInTool;
 
 
@@ -17,7 +19,8 @@ public class Toggle_Circles extends PlugInTool {
 		int y = e.getY();
 		int offscreenX = imp.getWindow().getCanvas().offScreenX(x);
 		int offscreenY = imp.getWindow().getCanvas().offScreenY(y);
-		DCResultsTable rt = DCResultsTable.getInstance();
+		ResultsTable rt = Analyzer.getResultsTable();
+		if (rt == null) return;
 		
 		Calibration cal = imp.getCalibration();
 		
@@ -40,8 +43,21 @@ public class Toggle_Circles extends PlugInTool {
 				if (c.equals(Color.red)) {
 					// Remove the entry from the results table.
 					// The result table uses the unit of the table.
-					int row = rt.findRow(rx*cal.pixelWidth, ry*cal.pixelWidth, 2*rr*cal.pixelWidth, rs);
-					if (row >=0) {
+					double[] x_col, y_col, dia_col, score_col;
+					x_col = rt.getColumnAsDoubles(0);
+					y_col = rt.getColumnAsDoubles(1);
+					dia_col = rt.getColumnAsDoubles(2);
+					score_col = rt.getColumnAsDoubles(3);
+					int row;
+					for (row = 0; row < x_col.length; row++) {
+						if (x_col[row] == rx*cal.pixelWidth &&
+								y_col[row] == ry*cal.pixelWidth &&
+								dia_col[row] == 2*rr*cal.pixelWidth &&
+								score_col[row] == rs) {
+							break;
+						}
+					}
+					if (row < x_col.length) {
 						rt.deleteRow(row);
 					}
 					r.setStrokeColor(Color.blue);
@@ -59,7 +75,7 @@ public class Toggle_Circles extends PlugInTool {
 			}
 		}
 		imp.getCanvas().repaint();
-		rt.show();
+		rt.show("Results");
 	}
 
 	public String getToolName() {
