@@ -203,7 +203,10 @@ public class Detect_Circles implements PlugInFilter  {
 
                     //The Roi unit is always pixels.
                     Roi r = new OvalRoi(x-R, y-R, 2*R, 2*R);
-                    r.setName(x+":"+y+":"+R+":"+S);
+                    // Set a magic string in the name, so the circle toggle
+                    // tool can distinguish between ROIs that were detected
+                    // by this code from all other ROIs.
+                    r.setName("DetectCircles:"+x+":"+y+":"+R+":"+S);
                     r.setStrokeColor(Color.red);
                     O.add(r);
                     if (p.show_hough) {
