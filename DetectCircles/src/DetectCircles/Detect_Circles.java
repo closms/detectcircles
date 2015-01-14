@@ -2,12 +2,15 @@ package DetectCircles;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
+import ij.Executer;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.Menus;
 import ij.gui.GenericDialog;
 import ij.gui.OvalRoi;
 import ij.gui.Overlay;
@@ -231,7 +234,10 @@ public class Detect_Circles implements PlugInFilter  {
 			IP.show();
 		}
 		
-		//new Executer(Toggle_Circles.class.getName().replaceFirst("^[^.]*.", "").replace('_', ' '), null);
+		Hashtable table = Menus.getCommands();
+		String cmd = Toggle_Circles.class.getName().replaceFirst("^[^.]*.", "").replace('_', ' ');
+		String className = (String)table.get(cmd);
+		IJ.runPlugIn(cmd, className, arg);
 	}
 
 	
