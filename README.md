@@ -25,6 +25,11 @@ directory.
 Changelog
 ---------
 
+2016-12-21 Michael Closson <closms@gmail.com>
+
+* Release [v1.2](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.2.jar)
+* Scope of 1.2 is described in commit d0911cff63388962ebd6955eb24a333cdcad8ad3
+
 2013-07-21 Michael Closson <closms@gmail.com>
 
 * [Fix issue #2](https://github.com/closms/detectcircles/issues/2)
