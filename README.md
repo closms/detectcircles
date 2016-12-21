@@ -17,6 +17,7 @@ Releases
 To use the plugin.  Place the release jar file in the ImageJ plugins
 directory.
 
+* [Download version 1.2](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.2.jar)  (md5sum: `987dd7ed7c4801f924f147fdc9fcb647`)
 * [Download version 1.1](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.1.jar)  (md5sum: `a01b5d1750c10ba3019446174c7f32ea`)
 * [Download version 1.0](https://github.com/closms/detectcircles/wiki/releases/Detect_Circles-1.0.jar)  (md5sum: `7d1e6102e7a0b37d5a675b0cff772921`)
 
