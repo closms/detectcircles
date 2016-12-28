@@ -59,7 +59,6 @@ public class Detect_Circles implements PlugInFilter  {
 		gd.addNumericField("Min_Diameter", p.minD*cal.pixelWidth, 3);
 		gd.addNumericField("Max_Diameter", p.maxD*cal.pixelWidth, 3);
 		gd.addNumericField("Min_Score", p.minScore, 0);
-		gd.addCheckbox("Smooth_Image", p.smooth);
 		gd.addCheckbox("Show_Hough_Space", p.show_hough);
 		gd.showDialog();
 		if (gd.wasCanceled()) return;
@@ -78,7 +77,6 @@ public class Detect_Circles implements PlugInFilter  {
 		p.minD = (double)gd.getNextNumber();
 		p.maxD = (double)gd.getNextNumber();
 		p.minScore = (double)gd.getNextNumber();
-		p.smooth = (boolean) gd.getNextBoolean();
 		p.show_hough = (boolean) gd.getNextBoolean();
 
 		minR = (int)(p.minD/cal.pixelWidth)/2;
@@ -91,8 +89,6 @@ public class Detect_Circles implements PlugInFilter  {
 
 		ImageProcessor nip = new ByteProcessor(ip, false);
 
-		if (p.smooth) nip.smooth();
-		
 		nip.findEdges();
 
 		if (p.show_hough) {
@@ -226,6 +222,17 @@ public class Detect_Circles implements PlugInFilter  {
 		rt.show("Results");
 
 		if (p.show_hough) {
+			/* find the max value in the accumulator space */
+			maxval = 0;
+			for(double[][] a: ALL) {
+				for (int h = 0; h < H; h++) {
+					for (int w = 0; w < W; w++) {
+						if (a[w][h] > maxval) { maxval = a[w][h]; }
+					}
+				}
+			}
+			/* there is a different accumulator for each radius.
+			 * add them all to an ImageStack */
 			for(double[][] a: ALL) {
 				ADD(IS, a);
 			}
@@ -272,10 +279,10 @@ public class Detect_Circles implements PlugInFilter  {
 		int x = 0;
 		int y = R;
 		
-		if (cy+R < H)  { img[cx][cy+R] += val;      if (img[cx][cy+R] > maxval) maxval = img[cx][cy+R]; }
-		if (cy-R >= 0) { img[cx][cy-R] += val;      if (img[cx][cy-R] > maxval) maxval = img[cx][cy-R]; }
-		if (cx+R < W)  { img[cx+R][cy] += val;      if (img[cx+R][cy] > maxval) maxval = img[cx+R][cy]; }
-		if (cx-R >= 0) { img[cx-R][cy] += val;      if (img[cx-R][cy] > maxval) maxval = img[cx-R][cy]; }
+		if (cy+R < H)  { img[cx][cy+R] += val; }
+		if (cy-R >= 0) { img[cx][cy-R] += val; }
+		if (cx+R < W)  { img[cx+R][cy] += val; }
+		if (cx-R >= 0) { img[cx-R][cy] += val; }
 		
 		while (x < y) {
 			if (f >= 0) {
@@ -287,14 +294,14 @@ public class Detect_Circles implements PlugInFilter  {
 			ddF_x += 2;
 			f += ddF_x;
 			
-		    if (cx+x <  W && cy+y <  H) { img[cx + x][cy + y] += val;      if (img[cx + x][cy + y] > maxval) maxval = img[cx + x][cy + y]; }
-		    if (cx-x >= 0 && cy+y <  H) { img[cx - x][cy + y] += val;      if (img[cx - x][cy + y] > maxval) maxval = img[cx - x][cy + y]; }
-		    if (cx+x <  W && cy-y >= 0) { img[cx + x][cy - y] += val;      if (img[cx + x][cy - y] > maxval) maxval = img[cx + x][cy - y]; }
-		    if (cx-x >= 0 && cy-y >= 0) { img[cx - x][cy - y] += val;      if (img[cx - x][cy - y] > maxval) maxval = img[cx - x][cy - y]; }
-		    if (cx+y <  W && cy+x <  H) { img[cx + y][cy + x] += val;      if (img[cx + y][cy + x] > maxval) maxval = img[cx + y][cy + x]; }
-		    if (cx-y >= 0 && cy+x <  H) { img[cx - y][cy + x] += val;      if (img[cx - y][cy + x] > maxval) maxval = img[cx - y][cy + x]; }
-		    if (cx+y <  W && cy-x >= 0) { img[cx + y][cy - x] += val;      if (img[cx + y][cy - x] > maxval) maxval = img[cx + y][cy - x]; }
-		    if (cx-y >= 0 && cy-x >= 0) { img[cx - y][cy - x] += val;      if (img[cx - y][cy - x] > maxval) maxval = img[cx - y][cy - x]; }
+		    if (cx+x <  W && cy+y <  H) { img[cx + x][cy + y] += val; }
+		    if (cx-x >= 0 && cy+y <  H) { img[cx - x][cy + y] += val; }
+		    if (cx+x <  W && cy-y >= 0) { img[cx + x][cy - y] += val; }
+		    if (cx-x >= 0 && cy-y >= 0) { img[cx - x][cy - y] += val; }
+		    if (cx+y <  W && cy+x <  H) { img[cx + y][cy + x] += val; }
+		    if (cx-y >= 0 && cy+x <  H) { img[cx - y][cy + x] += val; }
+		    if (cx+y <  W && cy-x >= 0) { img[cx + y][cy - x] += val; }
+		    if (cx-y >= 0 && cy-x >= 0) { img[cx - y][cy - x] += val; }
 
 		}
 	}
